@@ -4,7 +4,7 @@ import os.path
 from os import path
 
 
-def match_maker(path,*expr):
+def match_maker(*path,**expr):
 
    result = json.dumps({})#my JSON result will be inserted here
    if not expr or len(expr) == 0: #checking if the expressions exist or not
@@ -14,7 +14,7 @@ def match_maker(path,*expr):
       firmwareTypes = ["bin", "zip", "gzip","img","squashfs","cramfs","JFFS2","yaffs2","ext2","LZMA","zlib","ARJ"]
       ind = 0 # the general index from which we read from
       with open(path,'rb') as f:
-         if os.path.splitext(f)[1] in firmwareTypes: #checking if it is a firmware file
+         if path[-3:] in firmwareTypes: #checking if it is a firmware file
             byte = f.read(1)
             while byte: #looping through the file byte by byte and finding the matches and adding them to the result json
                for exp in expr.keys():
@@ -33,7 +33,7 @@ def match_maker(path,*expr):
                byte = f.read(1)         
       
             return result
-         elif os.path.splitext(f)[1] not in firmwareTypes:
+         elif path[-3:] not in firmwareTypes:
             print("not a binary file ")
             return result
    elif not os.path.exists(path):
@@ -43,4 +43,4 @@ def match_maker(path,*expr):
 
 
 if __name__ == '__main__':
-    print(match_maker("", dict()))
+    print(match_maker("bootloader-redfin-r3-0.3-6776358.img", dict({})))
